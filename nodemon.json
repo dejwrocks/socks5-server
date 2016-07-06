@@ -1,0 +1,7 @@
+{
+  "watch": [
+    "controllers/",
+    "models",
+    "server"
+  ]
+}
