@@ -62,11 +62,15 @@ module.exports = (function(self) {
       if (atyp === SOCKS5.IPV4) {
         address = [].slice.call(buffer, 4, 8).join(".");
         port = [].slice.call(buffer, 8, 10);
-        let high = port[0].toString(16), low = port[1].toString(16);
-        port = parseInt(`0x${high}${low}`, 10);
       } else if (atyp === SOCKS5.DOMAINNAME) {
-
+        let length = buffer[4];
+        address  = [].slice.call(buffer, 5, 5 + length);
+        address = new Buffer(address);
+        address = address.toString();
+        port = [].slice.call(buffer, 5 + length, 5 + length + 2);
       }
+      let high = port[0].toString(16), low = port[1].toString(16);
+      port = Number(`0x${high}${low}`);
 
       if (command === SOCKS5.CONNECT) {
         let target = net.createConnection(
